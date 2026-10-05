@@ -59,7 +59,7 @@ export function BossView({ game, onOpenGrimoire }: { game: Game; onOpenGrimoire:
   return (
     <main id="conteudo" className="mission mission--boss">
       <nav className="crumbs" aria-label="Navegação">
-        <a href={hrefFor({ name: 'map' })}>← Salão das Runas</a>
+        <a href={hrefFor({ name: 'map' })}>← Masmorra das Runas</a>
       </nav>
 
       <header className="mission-head">
@@ -170,7 +170,7 @@ export function BossView({ game, onOpenGrimoire }: { game: Game; onOpenGrimoire:
           </p>
           <div className="dialog-actions">
             <a className="button button--cast" href={hrefFor({ name: 'map' })}>
-              Voltar ao Salão
+              Voltar à masmorra
             </a>
             <button type="button" className="button button--quiet" onClick={() => setCelebrate(false)}>
               Ver a avaliação

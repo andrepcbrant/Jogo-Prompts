@@ -79,7 +79,7 @@ export function MissionView({ mission, game, onOpenGrimoire }: MissionViewProps)
   return (
     <main id="conteudo" className="mission">
       <nav className="crumbs" aria-label="Navegação">
-        <a href={hrefFor({ name: 'map' })}>← Salão das Runas</a>
+        <a href={hrefFor({ name: 'map' })}>← Masmorra das Runas</a>
       </nav>
 
       <header className="mission-head">
@@ -187,7 +187,7 @@ export function MissionView({ mission, game, onOpenGrimoire }: MissionViewProps)
           )}
           <div className="dialog-actions">
             <a className="button button--cast" href={hrefFor({ name: 'map' })}>
-              Voltar ao Salão
+              Voltar à masmorra
             </a>
             <button
               type="button"

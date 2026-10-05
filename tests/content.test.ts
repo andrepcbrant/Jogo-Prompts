@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { BOSS, LEVELS, MISSIONS } from '../src/content';
+import { BOSS_ROOM, corridor, DUNGEON_NARROW, DUNGEON_WIDE, edgesOf } from '../src/content/dungeon';
 import { evaluateBoss } from '../src/engine/boss';
 import { evaluate } from '../src/engine/evaluate';
 import { RULES } from '../src/engine/rules';
@@ -98,5 +99,56 @@ describe('Oráculo Confuso', () => {
 
   it('pontos somam 100', () => {
     expect(BOSS.items.reduce((sum, i) => sum + i.points, 0)).toBe(100);
+  });
+});
+
+describe('planta da masmorra', () => {
+  const layouts = { larga: DUNGEON_WIDE, estreita: DUNGEON_NARROW };
+
+  describe.each(Object.entries(layouts))('planta %s', (_name, layout) => {
+    const rooms = Object.entries(layout.rooms);
+
+    it('tem sala para toda missão e para o Oráculo, dentro da grade', () => {
+      for (const id of [...ids, BOSS_ROOM]) expect(layout.rooms[id], id).toBeDefined();
+      for (const [id, r] of rooms) {
+        expect(r.col + (r.span ?? 1), id).toBeLessThanOrEqual(layout.cols);
+        expect(r.row, id).toBeLessThan(layout.rows);
+      }
+    });
+
+    it('nenhuma sala ocupa a célula de outra', () => {
+      const cells = new Set<string>();
+      for (const [, r] of rooms) {
+        for (let c = r.col; c < r.col + (r.span ?? 1); c++) {
+          const key = `${c},${r.row}`;
+          expect(cells.has(key), key).toBe(false);
+          cells.add(key);
+        }
+      }
+    });
+
+    it('nenhum corredor atravessa uma sala que não é a sua', () => {
+      for (const edge of edgesOf(layout, MISSIONS)) {
+        const from = layout.rooms[edge.from];
+        const to = layout.rooms[edge.to];
+        if (!from || !to) throw new Error(`sala ausente em ${edge.from} → ${edge.to}`);
+        const points = corridor(from, to);
+        for (const [id, r] of rooms) {
+          if (id === edge.from || id === edge.to) continue;
+          const box = { x0: r.col + 0.1, x1: r.col + (r.span ?? 1) - 0.1, y0: r.row + 0.1, y1: r.row + 0.9 };
+          for (let i = 1; i < points.length; i++) {
+            const p = points[i - 1];
+            const q = points[i];
+            if (!p || !q) continue;
+            const hits =
+              Math.max(p.x, q.x) > box.x0 &&
+              Math.min(p.x, q.x) < box.x1 &&
+              Math.max(p.y, q.y) > box.y0 &&
+              Math.min(p.y, q.y) < box.y1;
+            expect(hits, `${edge.from} → ${edge.to} atravessa ${id}`).toBe(false);
+          }
+        }
+      }
+    });
   });
 });

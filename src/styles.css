@@ -1,35 +1,51 @@
 /* ==========================================================================
-   Guilda dos Escribas — direção de arte
-   Scriptorium: pergaminho, tinta ferrogálica, rubrica vermelha nos títulos
-   (como nos manuscritos), lápis-lazúli para foco e ações. O ouro aparece só
-   na conquista de uma runa.
+   Guilda dos Escribas — direção de arte: masmorra em pixel art
+   Pedra escura, tijolo de barro, luz de tocha. Títulos, botões e HUD em
+   fonte pixel (Pixelify Sans); textos longos em IBM Plex Sans para leitura
+   confortável; o editor em IBM Plex Mono. O pergaminho (preview) é a única
+   superfície clara: é o feitiço visto à luz da tocha.
    ========================================================================== */
 
 :root {
-  --paper: #f3ead7;
-  --paper-deep: #e8dbbf;
-  --sheet: #fbf6ea;
+  --void: #15100e;
+  --floor: #231c19;
+  --grout: #18120f;
+  --stone: #2e2522;
+  --stone-hi: #3d322d;
+  --stone-top: #4c3f38;
+  --edge: #0b0807;
+  --brick: #8b4f2e;
+  --brick-hi: #a8613a;
+  --mortar: #3a2418;
+
+  --bone: #f1e3c8;
+  --bone-dim: #c9b79a;
+  --torch: #ffb24a;
+  --torch-hot: #ffd27a;
+  --ember: #f0a03c;
+  --gold: #f2c14e;
+  --danger: #ff7a5c;
+  --moss: #7fd18b;
+  --frost: #8fc1ff;
+  --arcane: #b06ad9;
+  --focus: #7fe0ff;
+
+  --parchment: #f1e3c8;
+  --parchment-deep: #e2cfa8;
   --ink: #2b2118;
-  --ink-soft: #5b4a3a;
   --rubric: #9a2b1d;
-  --rubric-deep: #7a2015;
-  --lapis: #1d4f91;
-  --verdigris: #2e6a4a;
-  --gold: #b0862b;
-  --rule: #cdbb98;
-  --rule-strong: #8c785c;
-  --shadow: 0 1px 0 rgb(255 255 255 / 0.6) inset, 0 10px 30px -18px rgb(43 33 24 / 0.45);
 
-  --font-display: 'Alegreya SC', 'Alegreya', Georgia, serif;
-  --font-text: 'Alegreya', Georgia, serif;
-  --font-ui: 'Alegreya Sans', 'Segoe UI', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Menlo, monospace;
+  --font-pixel: 'Pixelify Sans', 'Courier New', monospace;
+  --font-text: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
 
-  --radius: 6px;
   --gutter: clamp(16px, 4vw, 32px);
   --measure: 68ch;
 
-  color-scheme: light;
+  /* Moldura pixelada: contorno preto, bisel claro em cima, sombra embaixo. */
+  --px-frame: inset 0 0 0 2px var(--stone-top), inset 0 -5px 0 0 rgb(0 0 0 / 0.28);
+
+  color-scheme: dark;
 }
 
 *,
@@ -45,14 +61,21 @@ html {
 
 body {
   margin: 0;
+  font-synthesis: none;
   min-height: 100vh;
-  color: var(--ink);
-  background-color: var(--paper);
+  color: var(--bone);
+  background-color: var(--floor);
   background-image:
-    radial-gradient(ellipse 120% 60% at 50% -10%, rgb(255 250 235 / 0.9), transparent 60%),
-    radial-gradient(ellipse 80% 50% at 100% 100%, rgb(176 134 43 / 0.08), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 0% 60%, rgb(154 43 29 / 0.05), transparent 70%);
-  font-family: var(--font-ui);
+    radial-gradient(ellipse 70% 55% at 50% 0%, rgb(255 178 74 / 0.1), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgb(0 0 0 / 0.55) 100%),
+    linear-gradient(var(--grout) 2px, transparent 2px),
+    linear-gradient(90deg, var(--grout) 2px, transparent 2px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    40px 40px,
+    40px 40px;
+  font-family: var(--font-text);
   font-size: 1.0625rem;
   line-height: 1.55;
   overflow-x: hidden;
@@ -64,13 +87,12 @@ body {
   min-height: 100vh;
 }
 
-img,
 svg {
   max-width: 100%;
 }
 
 a {
-  color: var(--lapis);
+  color: var(--torch-hot);
   text-underline-offset: 0.18em;
 }
 
@@ -83,25 +105,23 @@ pre {
 
 code {
   padding: 0.05em 0.3em;
-  border-radius: 3px;
-  background: rgb(43 33 24 / 0.07);
+  background: rgb(0 0 0 / 0.35);
+  color: var(--torch-hot);
   white-space: break-spaces;
 }
 
 kbd {
-  padding: 0 0.3em;
-  border: 1px solid var(--rule-strong);
-  border-bottom-width: 2px;
-  border-radius: 3px;
-  background: var(--sheet);
-  font-size: 0.8em;
+  padding: 0 0.35em;
+  border: 2px solid var(--edge);
+  background: var(--stone-hi);
+  box-shadow: inset 0 -2px 0 rgb(0 0 0 / 0.4);
+  font-size: 0.78em;
 }
 
-/* Foco sempre visível, em lápis-lazúli, com folga para não colar no elemento. */
+/* Foco sempre visível: ciano, que não existe em mais nada da masmorra. */
 :focus-visible {
-  outline: 3px solid var(--lapis);
-  outline-offset: 2px;
-  border-radius: 2px;
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
 }
 
 .visually-hidden {
@@ -122,8 +142,9 @@ kbd {
   left: 16px;
   z-index: 10;
   padding: 8px 14px;
-  background: var(--ink);
-  color: var(--sheet);
+  background: var(--torch);
+  color: var(--edge);
+  font-family: var(--font-pixel);
 }
 
 .skip-link:focus {
@@ -131,14 +152,31 @@ kbd {
 }
 
 .muted {
-  color: var(--ink-soft);
+  color: var(--bone-dim);
 }
 
-/* --- Cabeçalho ------------------------------------------------------------ */
+/* Moldura de painel com cantos "mordidos", típica de pixel art. Só em
+   contêineres (o recorte cortaria o contorno de foco de um botão). */
+.panel,
+.briefing-text,
+.why,
+.objective,
+.feedback,
+.hints,
+.entry {
+  border: 3px solid var(--edge);
+  background: var(--stone);
+  box-shadow: var(--px-frame);
+}
+
+/* --- Cabeçalho: muro de tijolos ------------------------------------------ */
 
 .site-header {
-  border-bottom: 1px solid var(--rule);
-  background: rgb(251 246 234 / 0.75);
+  border-bottom: 4px solid var(--edge);
+  background-color: var(--brick);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' shape-rendering='crispEdges'%3E%3Crect width='32' height='16' fill='%233a2418'/%3E%3Crect x='0' y='0' width='15' height='7' fill='%238b4f2e'/%3E%3Crect x='16' y='0' width='15' height='7' fill='%237d4628'/%3E%3Crect x='-8' y='8' width='15' height='7' fill='%237d4628'/%3E%3Crect x='8' y='8' width='15' height='7' fill='%238b4f2e'/%3E%3Crect x='24' y='8' width='15' height='7' fill='%237d4628'/%3E%3Crect x='0' y='0' width='15' height='1' fill='%23a8613a'/%3E%3Crect x='8' y='8' width='15' height='1' fill='%23a8613a'/%3E%3C/svg%3E");
+  background-size: 64px 32px;
+  image-rendering: pixelated;
 }
 
 .site-header-inner {
@@ -155,21 +193,23 @@ kbd {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: var(--ink);
+  padding: 6px 12px 6px 8px;
+  border: 3px solid var(--edge);
+  background: var(--stone);
+  box-shadow: var(--px-frame);
+  color: var(--bone);
   text-decoration: none;
 }
 
 .brand-mark {
-  color: var(--rubric);
-  font-size: 1.6rem;
-  line-height: 1;
+  filter: drop-shadow(0 0 6px rgb(255 178 74 / 0.7));
 }
 
 .brand-name {
-  font-family: var(--font-display);
+  font-family: var(--font-pixel);
   font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-weight: 500;
+  color: var(--torch-hot);
 }
 
 .rank {
@@ -181,38 +221,40 @@ kbd {
   align-items: center;
   gap: 2px 12px;
   margin-left: auto;
+  padding: 6px 12px;
+  border: 3px solid var(--edge);
+  background: var(--stone);
+  box-shadow: var(--px-frame);
 }
 
 .rank-title {
   grid-area: title;
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--rubric);
+  font-family: var(--font-pixel);
+  font-weight: 500;
+  color: var(--gold);
 }
 
+/* Barra de XP em blocos, como a vida de um herói. */
 .rank-bar {
   grid-area: bar;
-  height: 8px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 999px;
-  background: var(--paper-deep);
-  overflow: hidden;
+  height: 12px;
+  border: 2px solid var(--edge);
+  background: var(--void);
 }
 
 .rank-fill {
   display: block;
   height: 100%;
-  background: var(--rubric);
-  transition: width 300ms ease;
+  background: repeating-linear-gradient(90deg, var(--torch) 0 8px, var(--ember) 8px 10px);
 }
 
 .rank-xp {
   grid-area: xp;
   font-size: 0.85rem;
-  color: var(--ink-soft);
+  color: var(--bone-dim);
 }
 
-/* --- Botões --------------------------------------------------------------- */
+/* --- Botões ---------------------------------------------------------------- */
 
 .button {
   display: inline-flex;
@@ -221,44 +263,44 @@ kbd {
   gap: 8px;
   min-height: 44px;
   padding: 8px 18px;
-  border: 1px solid var(--ink);
-  border-radius: var(--radius);
-  background: transparent;
-  color: var(--ink);
-  font: inherit;
+  border: 3px solid var(--edge);
+  background: var(--stone-hi);
+  box-shadow:
+    inset 0 2px 0 0 var(--stone-top),
+    inset 0 -4px 0 0 rgb(0 0 0 / 0.35);
+  color: var(--bone);
+  font-family: var(--font-pixel);
+  font-size: 1rem;
   font-weight: 500;
   text-decoration: none;
   cursor: pointer;
-  transition:
-    background-color 120ms ease,
-    color 120ms ease;
 }
 
 .button:hover {
-  background: rgb(43 33 24 / 0.06);
+  background: var(--stone-top);
+}
+
+.button:active {
+  box-shadow: inset 0 4px 0 0 rgb(0 0 0 / 0.35);
 }
 
 .button--cast {
-  border-color: var(--rubric-deep);
-  background: var(--rubric);
-  color: #fff8ec;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: 0.03em;
+  background: var(--ember);
+  color: #1a1411;
+  font-weight: 500;
+  font-size: 1.1rem;
+  box-shadow:
+    inset 0 2px 0 0 var(--torch-hot),
+    inset 0 -4px 0 0 rgb(120 50 10 / 0.6),
+    0 0 18px rgb(255 178 74 / 0.35);
 }
 
 .button--cast:hover {
-  background: var(--rubric-deep);
-}
-
-.button--quiet {
-  border-color: var(--rule-strong);
+  background: var(--torch);
 }
 
 .button--grimoire {
-  font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .badge {
@@ -266,11 +308,10 @@ kbd {
   place-items: center;
   min-width: 1.6em;
   height: 1.6em;
-  padding: 0 0.4em;
-  border-radius: 999px;
-  background: var(--ink);
-  color: var(--sheet);
-  font-family: var(--font-ui);
+  padding: 0 0.35em;
+  border: 2px solid var(--edge);
+  background: var(--gold);
+  color: var(--edge);
   font-size: 0.8rem;
 }
 
@@ -278,14 +319,14 @@ kbd {
   padding: 0;
   border: 0;
   background: none;
-  color: var(--lapis);
+  color: var(--torch-hot);
   font: inherit;
   text-decoration: underline;
   text-underline-offset: 0.18em;
   cursor: pointer;
 }
 
-/* --- Páginas --------------------------------------------------------------- */
+/* --- Páginas ----------------------------------------------------------------- */
 
 main {
   flex: 1;
@@ -297,40 +338,42 @@ main {
 
 .page-title {
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-pixel);
   font-size: clamp(1.8rem, 1.3rem + 2vw, 2.6rem);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.1;
-  color: var(--rubric);
+  color: var(--torch);
+  text-shadow:
+    3px 3px 0 var(--edge),
+    0 0 24px rgb(255 178 74 / 0.35);
 }
 
 .eyebrow {
   margin: 0 0 4px;
-  font-family: var(--font-display);
+  font-family: var(--font-pixel);
   font-size: 0.95rem;
-  letter-spacing: 0.08em;
-  color: var(--ink-soft);
+  letter-spacing: 0.06em;
+  color: var(--bone-dim);
 }
 
 .lede {
   max-width: var(--measure);
-  font-family: var(--font-text);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
 }
 
 .notice {
   max-width: var(--measure);
   margin: 0 0 20px;
   padding: 10px 14px;
-  border-left: 4px solid var(--verdigris);
-  background: rgb(46 106 74 / 0.08);
+  border: 3px solid var(--edge);
+  border-left: 6px solid var(--moss);
+  background: var(--stone);
 }
 
 .notice--warn {
   max-width: none;
   margin: 0;
-  border-left-color: var(--rubric);
-  background: rgb(154 43 29 / 0.08);
+  border-left-color: var(--danger);
   text-align: center;
 }
 
@@ -341,8 +384,9 @@ main {
   align-items: center;
   gap: 8px 16px;
   padding: 20px var(--gutter);
-  border-top: 1px solid var(--rule);
-  color: var(--ink-soft);
+  border-top: 4px solid var(--edge);
+  background: var(--void);
+  color: var(--bone-dim);
   font-size: 0.9rem;
 }
 
@@ -350,213 +394,314 @@ main {
   margin: 0;
 }
 
-/* --- Mapa: árvore de runas ------------------------------------------------ */
+/* --- Mapa da masmorra ------------------------------------------------------ */
 
 .map-intro {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .map-intro .page-title {
   margin-bottom: 8px;
 }
 
-.tree-wrap {
-  overflow-x: auto;
-  padding-bottom: 8px;
-}
-
-.tree {
-  list-style: none;
+.map-status {
+  display: inline-block;
   margin: 0;
-  padding: 0;
+  padding: 4px 10px;
+  border: 2px solid var(--edge);
+  background: var(--void);
+  font-family: var(--font-pixel);
+  color: var(--gold);
 }
 
-.tree--root > .tree-item > .node {
-  max-width: 340px;
-  margin: 0 auto;
+.dungeon {
+  padding: 12px;
+  border: 4px solid var(--edge);
+  background: var(--void);
+  box-shadow:
+    inset 0 0 0 3px var(--mortar),
+    inset 0 0 60px rgb(0 0 0 / 0.8);
 }
 
-/* Ramos lado a lado no desktop; cada ramo é uma coluna. */
-.tree--root > .tree-item > .tree {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  margin-top: 36px;
+.plan {
   position: relative;
+  width: 100%;
 }
 
-.tree--root > .tree-item > .tree::before {
-  content: '';
-  position: absolute;
-  top: -36px;
-  left: 50%;
-  height: 18px;
-  border-left: 2px solid var(--rule-strong);
-}
-
-.tree--root > .tree-item > .tree > .tree-item {
-  position: relative;
-}
-
-.tree--root > .tree-item > .tree > .tree-item::before {
-  content: '';
-  position: absolute;
-  top: -18px;
-  left: -10px;
-  right: -10px;
-  border-top: 2px solid var(--rule-strong);
-}
-
-.tree--root > .tree-item > .tree > .tree-item:first-child::before {
-  left: 50%;
-}
-
-.tree--root > .tree-item > .tree > .tree-item:last-child::before {
-  right: 50%;
-}
-
-.tree--root > .tree-item > .tree > .tree-item:only-child::before {
+.plan--narrow {
   display: none;
 }
 
-.tree--root > .tree-item > .tree > .tree-item > .node::before {
-  content: '';
+@media (max-width: 720px) {
+  .plan--wide {
+    display: none;
+  }
+
+  .plan--narrow {
+    display: block;
+  }
+
+  .dungeon {
+    padding: 6px;
+  }
+}
+
+.plan-corridors {
   position: absolute;
-  top: -18px;
-  left: 50%;
-  height: 18px;
-  border-left: 2px solid var(--rule-strong);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  shape-rendering: crispEdges;
 }
 
-/* Filhos de um ramo descem em coluna. */
-.tree .tree .tree {
-  margin-top: 18px;
+.corridor polyline {
+  fill: none;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
 }
 
-.tree .tree .tree > .tree-item > .node::before {
-  content: '';
+.corridor-wall {
+  stroke: var(--edge);
+  stroke-width: 2;
+}
+
+.corridor-floor {
+  stroke: #2c2420;
+  stroke-width: 1.1;
+}
+
+.corridor--lit .corridor-floor {
+  stroke: #5e3f25;
+}
+
+.plan-rooms {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  height: 100%;
+}
+
+.plan {
+  /* As salas são posicionadas por porcentagem dentro desta caixa. */
+  container-type: inline-size;
+}
+
+.plan-slot {
   position: absolute;
-  top: -18px;
-  left: 50%;
-  height: 18px;
-  border-left: 2px solid var(--rule-strong);
+  padding: 0.8cqw 1.1cqw;
 }
 
-.node {
+.plan--narrow .plan-slot {
+  padding: 2cqw 2.5cqw;
+}
+
+.room {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
-  min-height: 84px;
-  padding: 14px 16px;
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  background: var(--sheet);
-  box-shadow: var(--shadow);
-  color: var(--ink);
+  justify-content: center;
+  gap: 2px;
+  height: 100%;
+  padding: 22% 8px 8px;
+  border: 4px solid var(--edge);
+  background-color: #2a221e;
+  background-image:
+    linear-gradient(#1f1916 2px, transparent 2px),
+    linear-gradient(90deg, #1f1916 2px, transparent 2px);
+  background-size: 20px 20px;
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.04);
+  color: var(--bone);
+  text-align: center;
   text-decoration: none;
+  overflow: hidden;
 }
 
-a.node:hover {
-  border-color: var(--rubric);
+/* Parede de tijolos só no topo da sala. */
+.room::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 18%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' shape-rendering='crispEdges'%3E%3Crect width='32' height='16' fill='%233a2418'/%3E%3Crect x='0' y='0' width='15' height='7' fill='%238b4f2e'/%3E%3Crect x='16' y='0' width='15' height='7' fill='%237d4628'/%3E%3Crect x='-8' y='8' width='15' height='7' fill='%237d4628'/%3E%3Crect x='8' y='8' width='15' height='7' fill='%238b4f2e'/%3E%3Crect x='24' y='8' width='15' height='7' fill='%237d4628'/%3E%3Crect x='0' y='0' width='15' height='1' fill='%23a8613a'/%3E%3Crect x='8' y='8' width='15' height='1' fill='%23a8613a'/%3E%3C/svg%3E");
+  background-size: 32px 16px;
+  border-bottom: 3px solid var(--edge);
 }
 
-.node-symbol {
+.room-torch {
+  position: absolute;
+  top: 3%;
+  z-index: 1;
+  filter: drop-shadow(0 0 6px rgb(255 178 74 / 0.8));
+}
+
+.room-torch--left {
+  left: 10%;
+}
+
+.room-torch--right {
+  right: 10%;
+}
+
+.room-glyph {
   display: grid;
   place-items: center;
-  flex: none;
-  width: 52px;
-  height: 52px;
-  border: 2px solid var(--rubric);
-  border-radius: 50%;
-  color: var(--rubric);
+  min-width: 2.2em;
+  height: 2.2em;
+  padding: 0 0.3em;
+  border: 3px solid var(--edge);
+  background: var(--void);
   font-family: var(--font-mono);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: clamp(0.9rem, 1.6cqw, 1.3rem);
   line-height: 1;
-  text-align: center;
+  color: var(--torch-hot);
+  text-shadow: 0 0 8px rgb(255 178 74 / 0.6);
 }
 
-.node-text {
+.room > * {
+  flex: none;
+}
+
+.room-seal {
   display: grid;
-  gap: 2px;
+  place-items: center;
 }
 
-.node-name {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 700;
+.room-name {
+  font-family: var(--font-pixel);
+  font-weight: 500;
+  font-size: clamp(0.85rem, 1.7cqw, 1.15rem);
+  line-height: 1.15;
+  color: var(--bone);
+  text-shadow: 2px 2px 0 var(--edge);
 }
 
-.node-meta {
-  font-size: 0.9rem;
-  color: var(--ink-soft);
+.room-meta {
+  font-size: clamp(0.72rem, 1.2cqw, 0.85rem);
+  line-height: 1.25;
+  color: var(--bone-dim);
 }
 
-.node--open {
-  border-color: var(--rubric);
-  border-width: 2px;
+.room-here {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  z-index: 1;
+  filter: drop-shadow(2px 2px 0 var(--edge));
 }
 
-.node--done .node-name {
-  color: var(--rubric);
+.room--open {
+  border-color: var(--torch);
+  box-shadow:
+    inset 0 0 0 3px var(--edge),
+    inset 0 0 40px rgb(255 178 74 / 0.22),
+    0 0 22px rgb(255 178 74 / 0.35);
 }
 
-.node--locked {
-  background: transparent;
-  border-style: dashed;
-  box-shadow: none;
+.room--open:hover {
+  box-shadow:
+    inset 0 0 0 3px var(--edge),
+    inset 0 0 60px rgb(255 178 74 / 0.35),
+    0 0 30px rgb(255 178 74 / 0.5);
 }
 
-.node--locked .node-symbol {
-  border-color: var(--rule-strong);
-  color: var(--ink-soft);
-}
-
-.boss-gate {
-  display: flex;
-  justify-content: center;
-  margin-top: 40px;
-}
-
-.node--boss {
-  width: min(100%, 420px);
-  border-width: 2px;
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--sheet);
-}
-
-.node--boss .node-symbol {
+.room--done {
   border-color: var(--gold);
-  color: #e3c379;
-  font-size: 1.6rem;
+  box-shadow:
+    inset 0 0 0 3px var(--edge),
+    inset 0 0 30px rgb(242 193 78 / 0.15);
 }
 
-.node--boss .node-meta {
-  color: #d9ccb4;
+.room--done .room-name {
+  color: var(--gold);
 }
 
-.node--boss.node--locked {
-  background: transparent;
-  color: var(--ink);
-  border-color: var(--rule-strong);
+/* Porta trancada: grade de ferro por cima da sala escura. */
+.room--locked {
+  background-color: #1a1513;
 }
 
-.node--boss.node--locked .node-meta {
-  color: var(--ink-soft);
+.room--locked::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0 18px, rgb(10 8 7 / 0.55) 18px 22px);
+  pointer-events: none;
 }
 
-.node--boss.node--locked .node-symbol {
-  border-color: var(--rule-strong);
-  color: var(--ink-soft);
+.room--locked .room-glyph {
+  color: #8a7a68;
+  text-shadow: none;
 }
 
-/* --- Missão --------------------------------------------------------------- */
+.room--locked .room-name {
+  color: #b8a78e;
+}
+
+.room--locked > * {
+  position: relative;
+  z-index: 1;
+}
+
+.room--boss {
+  background-color: #241a2c;
+  padding-top: 14%;
+}
+
+.room--boss.room--open {
+  border-color: var(--arcane);
+  box-shadow:
+    inset 0 0 0 3px var(--edge),
+    inset 0 0 60px rgb(176 106 217 / 0.3),
+    0 0 26px rgb(176 106 217 / 0.4);
+}
+
+.room--boss .room-name {
+  font-size: clamp(1rem, 2cqw, 1.4rem);
+}
+
+.room-eye {
+  filter: drop-shadow(0 0 8px rgb(176 106 217 / 0.8));
+}
+
+.plan--narrow .room {
+  padding: 26% 4px 4px;
+}
+
+.plan--narrow .room-torch {
+  display: none;
+}
+
+/* No celular o escriba fica sobre a parede, sem cobrir o texto. */
+.plan--narrow .room-here {
+  top: 2px;
+  bottom: auto;
+  left: 4px;
+}
+
+.plan--narrow .room-glyph {
+  font-size: 0.85rem;
+}
+
+.plan--narrow .room-name {
+  font-size: 0.82rem;
+}
+
+.plan--narrow .room-meta {
+  font-size: 0.7rem;
+}
+
+.plan--narrow .room--boss {
+  padding-top: 12%;
+}
+
+/* --- Missão ------------------------------------------------------------------ */
 
 .crumbs {
   margin-bottom: 12px;
-  font-size: 0.95rem;
+  font-family: var(--font-pixel);
 }
 
 .mission-head {
@@ -572,10 +717,13 @@ a.node:hover {
   flex: none;
   min-width: 64px;
   height: 64px;
-  padding: 0 10px;
-  border: 2px solid var(--rubric);
-  border-radius: 999px;
-  color: var(--rubric);
+  padding: 0 12px;
+  border: 4px solid var(--edge);
+  background: var(--void);
+  box-shadow:
+    inset 0 0 0 2px var(--torch),
+    0 0 20px rgb(255 178 74 / 0.35);
+  color: var(--torch-hot);
   font-family: var(--font-mono);
   font-weight: 600;
   font-size: 1.1rem;
@@ -584,43 +732,53 @@ a.node:hover {
 .briefing {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 16px 32px;
+  gap: 16px 24px;
   margin-bottom: 24px;
 }
 
 .briefing-text {
-  max-width: var(--measure);
-  font-family: var(--font-text);
-  font-size: 1.15rem;
-  line-height: 1.6;
+  padding: 16px 18px;
+  font-size: 1.08rem;
+  line-height: 1.65;
 }
 
 .briefing-text p {
   margin: 0 0 0.8em;
+  max-width: var(--measure);
 }
 
-/* Capitular de manuscrito no primeiro parágrafo. */
+.briefing-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* Capitular em pixel, como letra de pedra entalhada. */
 .dropcap::first-letter {
   float: left;
-  margin: 0.06em 0.08em 0 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 3.4em;
-  line-height: 0.82;
-  color: var(--rubric);
+  margin: 0.08em 0.12em 0 0;
+  padding: 0.05em 0.12em;
+  border: 3px solid var(--edge);
+  background: var(--void);
+  font-family: var(--font-pixel);
+  font-weight: 500;
+  font-size: 2.6em;
+  line-height: 0.9;
+  color: var(--torch);
 }
 
 .why {
   padding: 14px 16px;
-  border-left: 3px solid var(--lapis);
-  background: rgb(29 79 145 / 0.06);
+  border-left: 6px solid var(--frost);
 }
 
 .why-title,
 .objective-title {
   margin: 0 0 6px;
-  font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-family: var(--font-pixel);
+  font-size: 1.1rem;
+}
+
+.why-title {
+  color: var(--frost);
 }
 
 .why p,
@@ -630,13 +788,14 @@ a.node:hover {
 
 .objective {
   padding: 14px 16px;
-  border: 1px solid var(--rubric);
-  border-radius: var(--radius);
-  background: var(--sheet);
+  border-color: var(--torch);
+  box-shadow:
+    inset 0 0 0 2px var(--edge),
+    0 0 18px rgb(255 178 74 / 0.18);
 }
 
 .objective-title {
-  color: var(--rubric);
+  color: var(--torch);
 }
 
 @media (min-width: 960px) {
@@ -649,7 +808,7 @@ a.node:hover {
   }
 }
 
-/* --- Área de trabalho: editor + pergaminho -------------------------------- */
+/* --- Área de trabalho: editor + pergaminho ---------------------------------- */
 
 .workspace {
   display: grid;
@@ -658,29 +817,25 @@ a.node:hover {
 
 .workspace-tabs {
   display: flex;
-  gap: 4px;
-  border-bottom: 1px solid var(--rule-strong);
+  gap: 6px;
 }
 
 .workspace-tab {
   flex: 1;
   min-height: 44px;
-  border: 1px solid transparent;
-  border-bottom: none;
-  border-radius: var(--radius) var(--radius) 0 0;
-  background: transparent;
-  color: var(--ink-soft);
-  font: inherit;
-  font-family: var(--font-display);
-  font-weight: 700;
+  border: 3px solid var(--edge);
+  background: var(--void);
+  color: var(--bone-dim);
+  font-family: var(--font-pixel);
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
 }
 
 .workspace-tab[aria-selected='true'] {
-  border-color: var(--rule-strong);
-  background: var(--sheet);
-  color: var(--rubric);
-  margin-bottom: -1px;
+  background: var(--stone-hi);
+  color: var(--torch);
+  box-shadow: inset 0 -4px 0 0 var(--torch);
 }
 
 .workspace[data-tab='write'] .pane-preview,
@@ -720,14 +875,15 @@ a.node:hover {
 
 .pane-title {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-family: var(--font-pixel);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--torch-hot);
 }
 
 .pane-note {
   font-size: 0.9rem;
-  color: var(--ink-soft);
+  color: var(--bone-dim);
 }
 
 .rune-bar {
@@ -737,14 +893,17 @@ a.node:hover {
   margin-bottom: 8px;
 }
 
+/* Teclas de runa: pedras com bisel. */
 .rune-key {
   min-width: 44px;
   min-height: 44px;
   padding: 0 10px;
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  background: var(--sheet);
-  color: var(--ink);
+  border: 3px solid var(--edge);
+  background: var(--stone-hi);
+  box-shadow:
+    inset 0 2px 0 0 var(--stone-top),
+    inset 0 -4px 0 0 rgb(0 0 0 / 0.35);
+  color: var(--torch-hot);
   font-family: var(--font-mono);
   font-weight: 600;
   font-size: 0.95rem;
@@ -752,8 +911,11 @@ a.node:hover {
 }
 
 .rune-key:hover {
-  border-color: var(--rubric);
-  color: var(--rubric);
+  background: var(--stone-top);
+}
+
+.rune-key:active {
+  box-shadow: inset 0 4px 0 0 rgb(0 0 0 / 0.35);
 }
 
 .editor {
@@ -761,34 +923,42 @@ a.node:hover {
   width: 100%;
   min-height: 22rem;
   padding: 14px 16px;
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  background:
-    linear-gradient(to right, transparent 0 36px, rgb(154 43 29 / 0.18) 36px 37px, transparent 37px),
-    var(--sheet);
-  color: var(--ink);
+  border: 4px solid var(--edge);
+  background: #120d0b;
+  box-shadow:
+    inset 0 0 0 2px var(--stone-hi),
+    inset 0 8px 24px rgb(0 0 0 / 0.5);
+  color: var(--bone);
+  caret-color: var(--torch);
   font-family: var(--font-mono);
   font-size: 0.95rem;
   line-height: 1.6;
   resize: vertical;
   tab-size: 2;
-  padding-left: 48px;
-  box-shadow: var(--shadow);
+}
+
+.editor::selection {
+  background: rgb(255 178 74 / 0.35);
 }
 
 .editor:focus-visible {
   outline-offset: 0;
 }
 
+/* O pergaminho: única superfície clara, iluminada pela tocha. */
 .parchment {
   min-height: 22rem;
-  padding: 20px 24px;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: var(--sheet);
-  box-shadow: var(--shadow);
-  font-family: var(--font-text);
-  font-size: 1.08rem;
+  padding: 22px 24px;
+  border: 4px solid var(--edge);
+  background:
+    radial-gradient(ellipse at 50% 0%, #fbf3e0, transparent 70%),
+    var(--parchment);
+  box-shadow:
+    inset 0 0 0 3px var(--parchment-deep),
+    inset 0 0 40px rgb(120 80 30 / 0.25),
+    0 0 30px rgb(255 178 74 / 0.18);
+  color: var(--ink);
+  font-size: 1.05rem;
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
@@ -797,41 +967,50 @@ a.node:hover {
   margin-top: 0;
 }
 
+.parchment a {
+  color: #1d4f91;
+}
+
+.parchment code {
+  background: rgb(43 33 24 / 0.1);
+  color: var(--ink);
+}
+
 .parchment h1,
 .parchment h2,
 .parchment h3,
 .parchment h4 {
-  margin: 1.2em 0 0.4em;
-  font-family: var(--font-display);
+  margin: 1.1em 0 0.35em;
+  font-family: var(--font-pixel);
+  font-weight: 500;
   line-height: 1.2;
   color: var(--rubric);
 }
 
 .parchment h1 {
-  font-size: 1.8rem;
-  border-bottom: 1px solid var(--rule);
+  font-size: 1.7rem;
   padding-bottom: 0.2em;
+  border-bottom: 3px solid rgb(154 43 29 / 0.35);
 }
 
 .parchment h2 {
-  font-size: 1.4rem;
+  font-size: 1.35rem;
 }
 
 .parchment h3 {
-  font-size: 1.15rem;
+  font-size: 1.12rem;
 }
 
 .parchment strong {
-  font-weight: 700;
-  color: var(--ink);
-  background: linear-gradient(transparent 62%, rgb(176 134 43 / 0.28) 62%);
+  font-weight: 600;
+  background: linear-gradient(transparent 60%, rgb(242 193 78 / 0.55) 60%);
 }
 
 .parchment pre {
   padding: 12px 14px;
-  border-radius: var(--radius);
-  background: #2b2118;
-  color: #f3ead7;
+  border: 3px solid var(--edge);
+  background: #1d1714;
+  color: var(--bone);
   overflow-x: auto;
   white-space: pre;
 }
@@ -839,33 +1018,23 @@ a.node:hover {
 .parchment pre code {
   padding: 0;
   background: none;
+  color: inherit;
   white-space: pre;
 }
 
 .parchment blockquote {
   margin: 1em 0;
   padding: 4px 16px;
-  border-left: 4px solid var(--lapis);
-  background: rgb(29 79 145 / 0.05);
+  border-left: 5px solid #1d4f91;
+  background: rgb(29 79 145 / 0.08);
   font-style: italic;
 }
 
 .parchment hr {
-  height: 0;
+  height: 4px;
   margin: 1.6em 0;
   border: 0;
-  border-top: 2px solid var(--rule-strong);
-  overflow: visible;
-  text-align: center;
-}
-
-.parchment hr::after {
-  content: '❦';
-  position: relative;
-  top: -0.8em;
-  padding: 0 0.5em;
-  background: var(--sheet);
-  color: var(--rubric);
+  background: repeating-linear-gradient(90deg, var(--rubric) 0 10px, transparent 10px 16px);
 }
 
 .parchment table {
@@ -873,20 +1042,19 @@ a.node:hover {
   max-width: 100%;
   overflow-x: auto;
   border-collapse: collapse;
-  font-family: var(--font-ui);
   font-size: 0.95rem;
 }
 
 .parchment th,
 .parchment td {
   padding: 6px 10px;
-  border: 1px solid var(--rule-strong);
+  border: 2px solid #8c785c;
   text-align: left;
 }
 
 .parchment th {
-  background: var(--paper-deep);
-  font-weight: 700;
+  background: var(--parchment-deep);
+  font-weight: 600;
 }
 
 .parchment ul,
@@ -894,7 +1062,7 @@ a.node:hover {
   padding-left: 1.4em;
 }
 
-/* --- Ações, feedback e dicas --------------------------------------------- */
+/* --- Ações, feedback e dicas ------------------------------------------------- */
 
 .actions {
   display: flex;
@@ -906,39 +1074,36 @@ a.node:hover {
 .feedback {
   margin-top: 16px;
   padding: 16px;
-  border: 1px solid var(--rule-strong);
-  border-left-width: 5px;
-  border-radius: var(--radius);
-  background: var(--sheet);
+  border-left-width: 8px;
 }
 
 .feedback--fail {
-  border-left-color: var(--rubric);
+  border-left-color: var(--danger);
 }
 
 .feedback--ok {
-  border-left-color: var(--verdigris);
+  border-left-color: var(--moss);
 }
 
 .feedback-title {
   margin: 0 0 10px;
-  font-family: var(--font-display);
+  font-family: var(--font-pixel);
   font-size: 1.2rem;
 }
 
 .feedback--fail .feedback-title {
-  color: var(--rubric);
+  color: var(--danger);
 }
 
 .feedback--ok .feedback-title {
-  color: var(--verdigris);
+  color: var(--moss);
 }
 
 .feedback-sub {
   margin: 14px 0 6px;
-  font-family: var(--font-display);
+  font-family: var(--font-pixel);
   font-size: 1rem;
-  color: var(--lapis);
+  color: var(--frost);
 }
 
 .feedback-ok {
@@ -947,7 +1112,8 @@ a.node:hover {
 
 .feedback-ok summary {
   cursor: pointer;
-  color: var(--ink-soft);
+  color: var(--bone-dim);
+  font-family: var(--font-pixel);
 }
 
 .checks {
@@ -970,25 +1136,26 @@ a.node:hover {
 }
 
 .check-mark {
-  font-weight: 700;
+  font-family: var(--font-pixel);
+  font-weight: 500;
   line-height: 1.55;
   text-align: center;
 }
 
 .check--error .check-mark {
-  color: var(--rubric);
+  color: var(--danger);
 }
 
 .check--advice .check-mark {
-  color: var(--lapis);
+  color: var(--frost);
 }
 
 .check--ok .check-mark {
-  color: var(--verdigris);
+  color: var(--moss);
 }
 
 .check--ok .check-body {
-  color: var(--ink-soft);
+  color: var(--bone-dim);
 }
 
 .check-body .link-button {
@@ -1001,17 +1168,15 @@ a.node:hover {
   display: grid;
   justify-items: end;
   gap: 2px;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-family: var(--font-pixel);
+  font-size: 0.9rem;
   white-space: nowrap;
 }
 
 .tag {
   padding: 0 6px;
-  border: 1px solid var(--rubric);
-  border-radius: 999px;
-  color: var(--rubric);
-  font-family: var(--font-ui);
+  border: 2px solid var(--danger);
+  color: var(--danger);
   font-size: 0.75rem;
 }
 
@@ -1023,22 +1188,23 @@ a.node:hover {
 }
 
 .score-number {
-  font-family: var(--font-display);
-  font-size: 2.6rem;
-  font-weight: 700;
+  font-family: var(--font-pixel);
+  font-size: 2.8rem;
+  font-weight: 500;
   line-height: 1;
-  color: var(--ink);
+  color: var(--gold);
+  text-shadow: 3px 3px 0 var(--edge);
 }
 
 .score-label {
-  color: var(--ink-soft);
+  color: var(--bone-dim);
 }
 
 .hints {
   margin-top: 16px;
   padding: 16px;
-  border: 1px dashed var(--rule-strong);
-  border-radius: var(--radius);
+  border-style: dashed;
+  background: rgb(46 37 34 / 0.6);
 }
 
 .hints-head {
@@ -1051,13 +1217,19 @@ a.node:hover {
 
 .hints-title {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-family: var(--font-pixel);
+  font-size: 1.15rem;
+  color: var(--gold);
 }
 
 .hints-reward {
   margin: 0;
   font-size: 0.95rem;
+}
+
+.hints-reward strong {
+  font-family: var(--font-pixel);
+  color: var(--gold);
 }
 
 .hint-list {
@@ -1073,8 +1245,9 @@ a.node:hover {
 .entry-syntax {
   margin: 6px 0 0;
   padding: 10px 12px;
-  border-radius: var(--radius);
-  background: var(--paper-deep);
+  border: 3px solid var(--edge);
+  background: #120d0b;
+  color: var(--torch-hot);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -1083,21 +1256,23 @@ a.node:hover {
   margin-top: 8px;
 }
 
-/* --- Janelas (dialog) ----------------------------------------------------- */
+/* --- Janelas (dialog) --------------------------------------------------------- */
 
 .dialog {
   width: min(560px, calc(100vw - 32px));
   max-height: calc(100vh - 32px);
   padding: 0;
-  border: 1px solid var(--rule-strong);
-  border-radius: 10px;
-  background: var(--sheet);
-  color: var(--ink);
-  box-shadow: 0 30px 80px -20px rgb(43 33 24 / 0.6);
+  border: 4px solid var(--edge);
+  background: var(--stone);
+  box-shadow:
+    inset 0 0 0 3px var(--stone-top),
+    0 0 0 4px var(--torch),
+    0 30px 80px -10px rgb(0 0 0 / 0.8);
+  color: var(--bone);
 }
 
 .dialog::backdrop {
-  background: rgb(43 33 24 / 0.55);
+  background: rgb(8 6 5 / 0.78);
 }
 
 .dialog-body {
@@ -1124,22 +1299,28 @@ a.node:hover {
 
 .unlock-title {
   margin: 0 0 8px;
-  font-family: var(--font-display);
+  font-family: var(--font-pixel);
   font-size: 2rem;
-  color: var(--rubric);
+  color: var(--gold);
+  text-shadow: 3px 3px 0 var(--edge);
 }
 
 .unlock-xp {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--verdigris);
+  font-family: var(--font-pixel);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--moss);
 }
 
 .unlock-level {
   padding: 8px;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
+  border-top: 3px solid var(--edge);
+  border-bottom: 3px solid var(--edge);
+}
+
+.unlock-level strong {
+  font-family: var(--font-pixel);
+  color: var(--gold);
 }
 
 /* Grimório: painel lateral no desktop, gaveta inferior no celular. */
@@ -1149,8 +1330,10 @@ a.node:hover {
   height: 100vh;
   max-height: 100vh;
   margin: 0 0 0 auto;
-  border-radius: 0;
-  border-width: 0 0 0 1px;
+  border-width: 0 0 0 4px;
+  box-shadow:
+    inset 3px 0 0 0 var(--stone-top),
+    -20px 0 60px rgb(0 0 0 / 0.7);
 }
 
 @media (max-width: 640px) {
@@ -1159,8 +1342,7 @@ a.node:hover {
     height: auto;
     max-height: 88vh;
     margin: auto 0 0;
-    border-width: 1px 0 0;
-    border-radius: 14px 14px 0 0;
+    border-width: 4px 0 0;
   }
 }
 
@@ -1174,9 +1356,10 @@ a.node:hover {
 
 .drawer-title {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: 1.8rem;
-  color: var(--rubric);
+  font-family: var(--font-pixel);
+  font-size: 1.9rem;
+  color: var(--gold);
+  text-shadow: 3px 3px 0 var(--edge);
 }
 
 .drawer-head p {
@@ -1184,8 +1367,8 @@ a.node:hover {
 }
 
 .grimoire-empty {
-  font-family: var(--font-text);
   font-style: italic;
+  color: var(--bone-dim);
 }
 
 .grimoire-list {
@@ -1198,9 +1381,6 @@ a.node:hover {
 
 .entry {
   padding: 14px;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: var(--paper);
 }
 
 .entry p {
@@ -1215,30 +1395,32 @@ a.node:hover {
 
 .entry-title {
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-pixel);
   font-size: 1.2rem;
-  color: var(--rubric);
+  color: var(--gold);
 }
 
 .entry--locked {
-  background: transparent;
   border-style: dashed;
+  background: transparent;
+  box-shadow: none;
 }
 
 .entry-locked {
   margin: 0 !important;
-  color: var(--ink-soft);
+  color: var(--bone-dim);
 }
 
-/* --- Selo da runa: a única animação marcante ------------------------------ */
+/* --- Selo da runa: a única animação marcante ----------------------------------- */
 
 .seal {
   display: block;
   overflow: visible;
+  shape-rendering: crispEdges;
 }
 
 .seal-disc {
-  fill: var(--rubric-deep);
+  fill: #7a2015;
 }
 
 .seal-ring {
@@ -1260,7 +1442,7 @@ a.node:hover {
 .seal-glyph {
   font-family: var(--font-mono);
   font-weight: 600;
-  stroke: #e3c379;
+  stroke: #ffe39a;
   stroke-width: 1.5;
   stroke-dasharray: 400;
   stroke-dashoffset: 0;

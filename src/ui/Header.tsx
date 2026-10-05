@@ -1,4 +1,5 @@
 import type { LevelStatus } from '../engine/progression';
+import { Torch } from './sprites';
 
 interface HeaderProps {
   xp: number;
@@ -20,9 +21,7 @@ export function Header({ xp, level, learned, onOpenGrimoire }: HeaderProps) {
     <header className="site-header">
       <div className="site-header-inner">
         <a className="brand" href="#/">
-          <span className="brand-mark" aria-hidden="true">
-            ❦
-          </span>
+          <Torch className="brand-mark" size={30} />
           <span className="brand-name">Guilda dos Escribas</span>
         </a>
 

@@ -24,7 +24,7 @@ export function App() {
     ) : (
       <main id="conteudo" className="mission">
         <p>
-          Missão não encontrada. <a href="#/">Voltar ao Salão das Runas</a>.
+          Missão não encontrada. <a href="#/">Voltar à Masmorra das Runas</a>.
         </p>
       </main>
     );

@@ -21,11 +21,16 @@ npm run build    # site estático em dist/
 | `src/ui/` | Componentes React |
 | `tests/` | Testes do motor e o teste automático de conteúdo |
 
+## Direção de arte
+
+Masmorra em pixel art: pedra escura, tijolo e luz de tocha. Títulos, botões e HUD usam Pixelify Sans (só o peso 500, porque no negrito o "C" vira "G"), os textos longos usam IBM Plex Sans e o editor IBM Plex Mono. Os sprites (tocha, escriba, olho do Oráculo) são SVG desenhados pixel a pixel em `src/ui/sprites.tsx`. A planta da masmorra, com as posições das salas no desktop e no celular, fica em `src/content/dungeon.ts`. Ao adicionar uma missão, inclua a sala dela nas duas plantas; o teste confere que nenhum corredor atravessa outra sala.
+
 ## Adicionar uma missão
 
 1. Crie `src/content/missions/minha-missao.ts` com `defineMission({...})` (use uma missão existente como modelo).
 2. Importe-a em `src/content/index.ts` e coloque na lista `MISSIONS`.
-3. Rode `npm test`. O teste de conteúdo confere que a solução de referência passa em todas as regras, que o texto inicial falha, que os pré-requisitos existem e que não há ciclos.
+3. Posicione a sala nas duas plantas de `src/content/dungeon.ts`.
+4. Rode `npm test`. O teste de conteúdo confere que a solução de referência passa em todas as regras, que o texto inicial falha, que os pré-requisitos existem e que não há ciclos.
 
 As regras disponíveis estão em `src/engine/rules/index.ts`. O editor autocompleta os nomes e os parâmetros.
 
